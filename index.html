@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flappy Everlight</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #70c5ce;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background: #70c5ce;
+    }
+  </style>
+</head>
+<body>
+<canvas id="gameCanvas" width="320" height="480"></canvas>
+<script>
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  // Embed the Everlight logo (as flappy character) directly
+  const logo = new Image();
+  logo.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAG1BMVEXMzMyWlpbPz8/X19e3t7fb29u7u7u+vr64uLiQkJD//+YOYbAAAACXBIWXMAABYlAAAWJQFJUiTwAAABnUlEQVRoge2YvU7DQBCFvyZnYddfgJkbywMJQqMPon8GmByYQNKAHcvQZxWZWYOe6sNopQ32v9hXpgdv6v/azIC5uASwaAZtL/fJ2iXqjUmgl9ZHy8QSVSkLTiWbR1kNLBV1SmYCLgh9i5wrB8J2KXxNSaQilBK+lMEni4nZ+aDSddEj8YFbOJmTVacYEtoFY+lJ0YEXQzjMQ+fYJ9koHX2yQ54spwkoEq1Z5RAyFtIDjEKdKX8Hz7z1mvFGoRQTwGpEjI5yBbTn8kF1+fv9Hsf58kDKDGP4ZXlspm9JhISoK7SvK6JtVqpZm1Uou20ssFeOaymFcXoZ6JeuvyR2RSVfJ6ahfUbD8ABldBkxndXiUAAAAASUVORK5CYII=";
+
+  const pipeNorth = new Image();
+  pipeNorth.src = "https://i.ibb.co/1bBZrvf/pipeNorth.png";
+  const pipeSouth = new Image();
+  pipeSouth.src = "https://i.ibb.co/9c2xGyd/pipeSouth.png";
+
+  const gap = 85;
+  let constant;
+
+  let bX = 10;
+  let bY = 150;
+  const gravity = 1.5;
+  let score = 0;
+
+  const fly = () => {
+    bY -= 25;
+  };
+  document.addEventListener("keydown", fly);
+  document.addEventListener("touchstart", fly);
+
+  const pipes = [];
+  pipes[0] = {
+    x: canvas.width,
+    y: 0,
+  };
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < pipes.length; i++) {
+      constant = pipeNorth.height + gap;
+      ctx.drawImage(pipeNorth, pipes[i].x, pipes[i].y);
+      ctx.drawImage(pipeSouth, pipes[i].x, pipes[i].y + constant);
+
+      pipes[i].x--;
+
+      if (pipes[i].x === 125) {
+        pipes.push({
+          x: canvas.width,
+          y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height,
+        });
+      }
+
+      if (
+        bX + 32 >= pipes[i].x &&
+        bX <= pipes[i].x + pipeNorth.width &&
+        (bY <= pipes[i].y + pipeNorth.height || bY + 32 >= pipes[i].y + constant)
+      ) {
+        location.reload(); // restart on collision
+      }
+
+      if (pipes[i].x === 5) {
+        score++;
+      }
+    }
+
+    ctx.drawImage(logo, bX, bY, 32, 32);
+    bY += gravity;
+
+    ctx.fillStyle = "#000";
+    ctx.font = "20px Verdana";
+    ctx.fillText("Score : " + score, 10, canvas.height - 20);
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
+</body>
+</html>
