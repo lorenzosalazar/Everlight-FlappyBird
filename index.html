@@ -12,15 +12,20 @@
     }
     canvas {
       display: block;
-      margin: 0 auto;
+  width: 100vw;
+  height: 100vh;
     }
   </style>
 </head>
 <body>
-<canvas id="gameCanvas" width="320" height="480"></canvas>
+<canvas <canvas id="gameCanvas"></canvas>
 <script>
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
+  
+  canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
 
   const logo = new Image();
   logo.src = "./logo.png";
@@ -31,7 +36,7 @@
   const pipeSouth = new Image();
   pipeSouth.src = "./pipeSouth.png";
 
-  const gap = 85;
+  const gap = 135;
   let constant;
 
   let bX = 10;
@@ -86,7 +91,7 @@
     }
 
     // Draw the bird (logo)
-    ctx.drawImage(logo, bX, bY, 32, 32);
+    ctx.drawImage(logo, bX, bY, 48, 48);
     bY += gravity;
 
     ctx.fillStyle = "#000";
