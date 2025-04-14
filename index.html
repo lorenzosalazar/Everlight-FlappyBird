@@ -62,13 +62,17 @@ canvas.height = window.innerHeight;
     for (let i = 0; i < pipes.length; i++) {
       constant = pipeNorth.height + gap;
 
-      // Draw top pipe normally
-      ctx.drawImage(pipeNorth, pipes[i].x, pipes[i].y);
+      // Draw top pipe upside down
+ ctx.save();
+ctx.translate(pipes[i].x + pipeNorth.width / 2, pipes[i].y + pipeNorth.height / 2);
+ctx.scale(1, -1);
+ctx.drawImage(pipeNorth, -pipeNorth.width / 2, -pipeNorth.height / 2);
+ctx.restore();
 
       // Draw bottom pipe
       ctx.drawImage(pipeSouth, pipes[i].x, pipes[i].y + constant);
 
-      pipes[i].x--;
+      pipes[i].x-=3;
 
       if (pipes[i].x === 20) {
         pipes.push({
