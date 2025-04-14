@@ -41,7 +41,7 @@ canvas.height = window.innerHeight;
 
   let bX = 10;
   let bY = 150;
-  const gravity = 1.5;
+  const gravity = 1.0;
   let score = 0;
 
   const fly = () => {
@@ -70,7 +70,7 @@ canvas.height = window.innerHeight;
 
       pipes[i].x--;
 
-      if (pipes[i].x === 125) {
+      if (pipes[i].x === 80) {
         pipes.push({
           x: canvas.width,
           y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height,
