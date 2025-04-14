@@ -9,8 +9,9 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      height: 100%
+      height: 100%;
       touch-action: none;
+      overscroll-behavior: none;
     }
     canvas {
       display: block;
@@ -25,7 +26,6 @@
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  // Resize canvas to screen
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
@@ -38,7 +38,10 @@
   const pipeSouth = new Image();
   pipeSouth.src = "./pipeSouth.png";
 
-  const gap = canvas.height * 0.25; // dynamic gap
+  const bg = new Image();
+  bg.src = "./background.png";
+
+  const gap = canvas.height * 0.25;
   let constant;
 
   let bX = canvas.width * 0.1;
@@ -64,26 +67,22 @@
   };
 
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < pipes.length; i++) {
       constant = pipeNorth.height + gap;
 
-      // Flip top pipe
       ctx.save();
       ctx.translate(pipes[i].x + pipeNorth.width / 2, pipes[i].y + pipeNorth.height / 2);
       ctx.scale(1, -1);
       ctx.drawImage(pipeNorth, -pipeNorth.width / 2, -pipeNorth.height / 2);
       ctx.restore();
 
-      // Draw bottom pipe
       ctx.drawImage(pipeSouth, pipes[i].x, pipes[i].y + constant);
 
       pipes[i].x -= pipeSpeed;
 
-      // Spawn new pipe
       if (pipes[i].x === Math.floor(canvas.width - 200)) {
- {
         pipes.push({
           x: canvas.width,
           y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height,
@@ -91,27 +90,23 @@
         });
       }
 
-      // Score logic
       if (pipes[i].x + pipeNorth.width < bX && !pipes[i].passed) {
         score++;
         pipes[i].passed = true;
       }
 
-      // Collision
       if (
         bX + birdSize >= pipes[i].x &&
         bX <= pipes[i].x + pipeNorth.width &&
         (bY <= pipes[i].y + pipeNorth.height || bY + birdSize >= pipes[i].y + constant)
       ) {
-        location.reload(); // Restart on collision
+        location.reload();
       }
     }
 
-    // Draw bird
     ctx.drawImage(logo, bX, bY, birdSize, birdSize);
-    bY += gravity * 2;
+    bY += gravity * 1.5;
 
-    // Score display
     ctx.fillStyle = "#000";
     ctx.font = `${canvas.height * 0.05}px Verdana`;
     ctx.fillText("Score : " + score, 10, canvas.height - 30);
@@ -123,5 +118,3 @@
 </script>
 </body>
 </html>
-
-
