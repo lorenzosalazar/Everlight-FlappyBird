@@ -22,6 +22,7 @@
 </head>
 <body>
 <canvas id="gameCanvas"></canvas>
+<audio id="pointSound" src="point.mp3" preload="auto"></audio>
 <script>
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
@@ -47,7 +48,7 @@
   let bX = canvas.width * 0.1;
   let bY = canvas.height / 2;
   const gravity = 0.6;
-  const jump = canvas.height * 0.08;
+  const jump = canvas.height * 0.06;
   const birdSize = canvas.height * 0.08;
   const pipeSpeed = 2;
 
@@ -93,7 +94,7 @@
       pipes[i].x -= pipeSpeed;
 
       // More spacing between pipes (greater distance before new one spawns)
-      if (pipes[i].x === Math.floor(canvas.width - 300)) {
+      if (pipes[i].x === Math.floor(canvas.width - 350)) {
         pipes.push({
           x: canvas.width,
           y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height,
@@ -102,6 +103,7 @@
       }
 
       if (pipes[i].x + pipeNorth.width < bX && !pipes[i].passed) {
+  document.getElementById('pointSound').play();
         score++;
         pipes[i].passed = true;
       }
@@ -120,7 +122,7 @@
 
     ctx.fillStyle = "#000";
     ctx.font = `${canvas.height * 0.05}px Verdana`;
-    ctx.fillText("Score : " + score, 10, canvas.height - 30);
+    ctx.fillText("Score: " + score, 20, 40);
 
     requestAnimationFrame(draw);
   }
