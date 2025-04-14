@@ -9,6 +9,7 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
+      height: 100%
       touch-action: none;
     }
     canvas {
@@ -42,7 +43,7 @@
 
   let bX = canvas.width * 0.1;
   let bY = canvas.height / 2;
-  const gravity = 1.0;
+  const gravity = 0.6;
   const jump = canvas.height * 0.08;
   const birdSize = canvas.height * 0.08;
   const pipeSpeed = 2;
@@ -81,7 +82,8 @@
       pipes[i].x -= pipeSpeed;
 
       // Spawn new pipe
-      if (pipes[i].x === canvas.width * 0.5) {
+      if (pipes[i].x === Math.floor(canvas.width - 200)) {
+ {
         pipes.push({
           x: canvas.width,
           y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height,
@@ -107,7 +109,7 @@
 
     // Draw bird
     ctx.drawImage(logo, bX, bY, birdSize, birdSize);
-    bY += gravity * 3;
+    bY += gravity * 2;
 
     // Score display
     ctx.fillStyle = "#000";
