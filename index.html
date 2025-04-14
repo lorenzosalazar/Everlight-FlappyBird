@@ -5,26 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Flappy Everlight</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       overflow: hidden;
-      background: #70c5ce;
+      touch-action: none;
     }
     canvas {
       display: block;
-  width: 100vw;
-  height: 100vh;
+      width: 100vw;
+      height: 100vh;
     }
   </style>
 </head>
 <body>
-<canvas <canvas id="gameCanvas"></canvas>
+<canvas id="gameCanvas"></canvas>
 <script>
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
-  
+
+  // Resize canvas to screen
   canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+  canvas.height = window.innerHeight;
 
   const logo = new Image();
   logo.src = "./logo.png";
@@ -35,16 +37,20 @@ canvas.height = window.innerHeight;
   const pipeSouth = new Image();
   pipeSouth.src = "./pipeSouth.png";
 
-  const gap = 115;
+  const gap = canvas.height * 0.25; // dynamic gap
   let constant;
 
-  let bX = 10;
-  let bY = 150;
+  let bX = canvas.width * 0.1;
+  let bY = canvas.height / 2;
   const gravity = 1.0;
+  const jump = canvas.height * 0.08;
+  const birdSize = canvas.height * 0.08;
+  const pipeSpeed = 2;
+
   let score = 0;
 
   const fly = () => {
-    bY -= 35;
+    bY -= jump;
   };
   document.addEventListener("keydown", fly);
   document.addEventListener("touchstart", fly);
@@ -53,6 +59,7 @@ canvas.height = window.innerHeight;
   pipes[0] = {
     x: canvas.width,
     y: 0,
+    passed: false,
   };
 
   function draw() {
@@ -61,45 +68,51 @@ canvas.height = window.innerHeight;
     for (let i = 0; i < pipes.length; i++) {
       constant = pipeNorth.height + gap;
 
-      // Draw top pipe upside down
- ctx.save();
-ctx.translate(pipes[i].x + pipeNorth.width / 2, pipes[i].y + pipeNorth.height / 2);
-ctx.scale(1, -1);
-ctx.drawImage(pipeNorth, -pipeNorth.width / 2, -pipeNorth.height / 2);
-ctx.restore();
+      // Flip top pipe
+      ctx.save();
+      ctx.translate(pipes[i].x + pipeNorth.width / 2, pipes[i].y + pipeNorth.height / 2);
+      ctx.scale(1, -1);
+      ctx.drawImage(pipeNorth, -pipeNorth.width / 2, -pipeNorth.height / 2);
+      ctx.restore();
 
       // Draw bottom pipe
       ctx.drawImage(pipeSouth, pipes[i].x, pipes[i].y + constant);
 
-      pipes[i].x-=3;
+      pipes[i].x -= pipeSpeed;
 
-      if (pipes[i].x === 100) {
+      // Spawn new pipe
+      if (pipes[i].x === canvas.width * 0.5) {
         pipes.push({
           x: canvas.width,
           y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height,
+          passed: false,
         });
       }
 
-      if (
-        bX + 32 >= pipes[i].x &&
-        bX <= pipes[i].x + pipeNorth.width &&
-        (bY <= pipes[i].y + pipeNorth.height || bY + 32 >= pipes[i].y + constant)
-      ) {
-        location.reload(); // collision
+      // Score logic
+      if (pipes[i].x + pipeNorth.width < bX && !pipes[i].passed) {
+        score++;
+        pipes[i].passed = true;
       }
 
-      if (pipes[i].x === 5) {
-        score++;
+      // Collision
+      if (
+        bX + birdSize >= pipes[i].x &&
+        bX <= pipes[i].x + pipeNorth.width &&
+        (bY <= pipes[i].y + pipeNorth.height || bY + birdSize >= pipes[i].y + constant)
+      ) {
+        location.reload(); // Restart on collision
       }
     }
 
-    // Draw the bird (logo)
-    ctx.drawImage(logo, bX, bY, 48, 48);
-    bY += gravity;
+    // Draw bird
+    ctx.drawImage(logo, bX, bY, birdSize, birdSize);
+    bY += gravity * 3;
 
+    // Score display
     ctx.fillStyle = "#000";
-    ctx.font = "20px Verdana";
-    ctx.fillText("Score : " + score, 10, canvas.height - 20);
+    ctx.font = `${canvas.height * 0.05}px Verdana`;
+    ctx.fillText("Score : " + score, 10, canvas.height - 30);
 
     requestAnimationFrame(draw);
   }
