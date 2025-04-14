@@ -13,7 +13,6 @@
     canvas {
       display: block;
       margin: 0 auto;
-      background: #70c5ce;
     }
   </style>
 </head>
@@ -23,22 +22,14 @@
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  // Embed the Everlight logo (as flappy character) directly
   const logo = new Image();
   logo.src = "./logo.png";
-  
-  // Later in the draw function:
-ctx.drawImage(logo, bX, bY, 32, 32); // This places the logo as the bird
+
+  const pipeNorth = new Image();
+  pipeNorth.src = "./pipeNorth.png";
 
   const pipeSouth = new Image();
   pipeSouth.src = "./pipeSouth.png";
-
-// Draw the top pipe flipped vertically
-ctx.save();
-ctx.translate(pipes[i].x + pipeNorth.width / 2, pipes[i].y + pipeNorth.height / 2);
-ctx.scale(1, -1); // flip vertically
-ctx.drawImage(pipeSouth, -pipeSouth.width / 2, -pipeSouth.height / 2);
-ctx.restore();
 
   const gap = 85;
   let constant;
@@ -65,7 +56,11 @@ ctx.restore();
 
     for (let i = 0; i < pipes.length; i++) {
       constant = pipeNorth.height + gap;
+
+      // Draw top pipe normally
       ctx.drawImage(pipeNorth, pipes[i].x, pipes[i].y);
+
+      // Draw bottom pipe
       ctx.drawImage(pipeSouth, pipes[i].x, pipes[i].y + constant);
 
       pipes[i].x--;
@@ -82,7 +77,7 @@ ctx.restore();
         bX <= pipes[i].x + pipeNorth.width &&
         (bY <= pipes[i].y + pipeNorth.height || bY + 32 >= pipes[i].y + constant)
       ) {
-        location.reload(); // restart on collision
+        location.reload(); // collision
       }
 
       if (pipes[i].x === 5) {
@@ -90,6 +85,7 @@ ctx.restore();
       }
     }
 
+    // Draw the bird (logo)
     ctx.drawImage(logo, bX, bY, 32, 32);
     bY += gravity;
 
@@ -104,4 +100,5 @@ ctx.restore();
 </script>
 </body>
 </html>
+
 
