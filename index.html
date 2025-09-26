@@ -47,8 +47,8 @@
 
   let bX = canvas.width * 0.1;
   let bY = canvas.height / 2;
-  const gravity = 0.8;
-  const jump = canvas.height * 0.06;
+  const gravity = 0.9;
+  const jump = canvas.height * 0.08;
   const birdSize = canvas.height * 0.08;
   const pipeSpeed = 2;
 
@@ -94,7 +94,7 @@
       pipes[i].x -= pipeSpeed;
 
       // More spacing between pipes (greater distance before new one spawns)
-      if (pipes[i].x === Math.floor(canvas.width - 400)) {
+      if (pipes[i].x === Math.floor(canvas.width - 450)) {
         pipes.push({
           x: canvas.width,
           y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height,
