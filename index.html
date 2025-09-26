@@ -131,3 +131,20 @@
 </script>
 </body>
 </html>
+
+</script>
+submitScore("Player1", score);function submitScore(name, score) {
+  fetch("https://script.google.com/a/macros/everlightsolar.com/s/AKfycbycRmtq3lYAEEkwxZ4ruERuxBArDOyXLOJ5r4zyDFoB8hs0UpquRowHS0FpqFFBkAVG/exec", {
+    method: "POST",
+    body: JSON.stringify({ name: name, score: score })
+  });
+}
+
+async function getLeaderboard() {
+  const res = await fetch("https://script.google.com/a/macros/everlightsolar.com/s/AKfycbycRmtq3lYAEEkwxZ4ruERuxBArDOyXLOJ5r4zyDFoB8hs0UpquRowHS0FpqFFBkAVG/exec");
+  const data = await res.json();
+
+  // You can now display this in HTML
+  console.log(data); // array of [name, score, timestamp]
+}
+
