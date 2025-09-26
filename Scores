@@ -1,0 +1,13 @@
+<ul id="scores"></ul>
+<script>
+  fetch("https://script.google.com/a/macros/everlightsolar.com/s/AKfycbycRmtq3lYAEEkwxZ4ruERuxBArDOyXLOJ5r4zyDFoB8hs0UpquRowHS0FpqFFBkAVG/exec")
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("scores");
+      data.forEach(row => {
+        const li = document.createElement("li");
+        li.textContent = `${row[0]}: ${row[1]}`;
+        list.appendChild(li);
+      });
+    });
+</script>
